@@ -25,6 +25,7 @@ class Board:
         self.loops = loops
         self.shells = shells
         self.squares = shells**2
+        self.homes = 4
         
         self.square_set = {(x*a, y*b) for a, b in unit_squares for x in range(0, loops +1) for y in range(0, loops + 1)}
         
@@ -38,7 +39,7 @@ class Board:
         squares = self.squares
         
         # (2.2.1) Setting Home Squares and Castle Square
-        self.homes = [(a*loops, b*loops) for a, b in unit_squares]
+        self.list_of_homes = [(a*loops, b*loops) for a, b in unit_squares]
         self.castle = [(0, 0)]
         
         # (2.2.2) Setting Other Default Squares
@@ -77,5 +78,52 @@ class Board:
         elif action = 1 and square not in self.square_set:
             self.square_set.add(square)
         elif action = 0:
-            return 0        
+            return 0
+    
+    # (2.6) Home Manager
+    @requireRange(action="[-1, 1]")
+    @requireType(action=int, square=tuple)
+    def home_manager(self, action, square):
+        """Method to manipulate home houses. 
+        Accepts (2) required args:
+        - [action: int, options: (-1, 1)] to pass the action (-1 to remove from home, 1 to make the house a home, and 0 for no passed action (returns 0).
+        - [square: tuple] to pass the tuple (should be valid for the board size).
+        
+        Does nothing if the square is already of the provided status."""
+        
+        assert square in self.square_set, "Square is invalid for the given board."
+        
+        if action = -1 and square in self.list_of_homes and self.homes >= 2:
+            self.list_of_homes.remove(square)
+            self.homes -= 1
+        elif action = 1 and square not in self.list_of_homes and self.homes < self.squares - 1:
+            self.list_of_homes.add(square)
+            self.safe_houses.add(square)
+            self.homes += 1
+        elif action = 0:
+            return 0
+    
+    # (2.7) Home Query Officer
+    @requireType(square=tuple)
+    def ishome(self, square):
+        """Method to check if a given square is a home.""
+        Accepts (1) required arg:
+        - [square: tuple] square tuple should be valid.
+        
+        Returns a boolean."""
+        assert square in self.square_set, "Square is invalid for the given board."
+        
+        return square in self.safe_houses
+    
+    # (2.8) Home Distributor Method
+    @requireType(player_id=int)
+    def return_home_for(self, player_id):
+        """Method to return the designated home for a given Player_ID.
+        Accepts (1) required arg:
+        - [player_id: int] to pass the player ID.
+    
+        Returns the corresponding block tuple."""
             
+        assert player_id >= self.homes, "Number of players should be equal to or less than the avaliable houses."
+        
+        return self.list_of_homes[player_id]
