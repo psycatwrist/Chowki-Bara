@@ -19,10 +19,12 @@ class CowrieShells:
     - [object].roll()"""
     
     # (2.1) "Initialization" method
-    def __init__(self, num=4, nudge=0.5, zm=2):
+    def __init__(self, num=4, nudge=0.5, zm=2, opens_pieces_on=[1], rewarding_numbers=[1]):
         self.num = num
         self.nudge = nudge
         self.zm = zm
+        self.opens_pieces_on = opens_pieces_on
+        self.rwwarding_numbers = rewarding_numbers
         
         # (2.1.1) Error Handling
         if (not isinstance(num, int)) or (num < 1):
