@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "Chowki-Bara"
+version = "0.1.0"
+description = "A modular python library for simulating the traditional chowki bara—with a few extra quirks."
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Jayant Sharma" }
+]
+
+
+[project.urls]
+Homepage = "https://github.com/psycatwrist/Chowki-Bara"
+Repository = "https://github.com/psycatwrist/Chowki-Bara"
+Issues = "https://github.com/psycatwrist/Chowki-Bara/issues"
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
