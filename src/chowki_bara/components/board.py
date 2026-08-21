@@ -4,7 +4,6 @@
 
 # (1) Imports
 from chowki_bara.utils.decorators import requireType, requireRange
-from chowki_bara.utils.cowrie_shells import CowrieShells
 
 
 # (2) Board Class
@@ -15,21 +14,17 @@ class Board:
     # (2.1) Initialization method
     @requireRange(loops="[1, inf)", shells="[1, inf)")
     @requireType(loops=int, shells=int)
-    def __init__(self, loops, shells=4):
+    def __init__(self, loops=5, shells=4):
         """Method for initialization. 
         Accepts (1) required arg:
-        - [loops: int > 0] to pass the number of loops.
-        Accepts (1) optional args:
-        - [shells: int > 0] to pass the number of cowrie shells for the game."""
+        - [loops: int > 0] to pass the number of loops."""
         
         self.loops = loops
-        self.shells = shells
-        self.squares = shells**2
         self.homes = 4
         
-        self.square_set = {(a, b) for a in range(-loops, loops + 1) for b in range(-loops, loops + 1)}
+        self.square_set = {(a, b) for a in range(-loops, loops + 1) for b in range(-loops, loops + 1)} # Creating a set of all possible squares
         
-        self.set_default_config()
+        self.set_default_config() # Set default configuration
         
         self.piece_register = {}
         
@@ -37,8 +32,6 @@ class Board:
     def set_default_config(self):
         """Method to set default configuration."""
         loops = self.loops
-        shells = self.shells
-        squares = self.squares
         
         # (2.2.1) Setting Home Squares and Castle Square
         self.list_of_homes = [(a*loops, b*loops) for a, b in unit_squares]
@@ -53,13 +46,12 @@ class Board:
     # (2.3) Safe Query Officer
     @requireType(square=tuple)
     def issafe(self, square):
-        """Method to check if a given square is safe.""
+        """Method to check if a given square is safe.
         Accepts (1) required arg:
         - [square: tuple] square tuple should be valid.
         
         Returns a boolean."""
         assert square in self.square_set, "Square is invalid for the given board."
-        
         return square in self.safe_houses
         
     # (2.4) Safe House Manager
@@ -75,10 +67,10 @@ class Board:
         
         assert square in self.square_set, "Square is invalid for the given board."
         
-        if action == -1 and square in self.square_set:
-            self.square_set.remove(square)
-        elif action == 1 and square not in self.square_set:
-            self.square_set.add(square)
+        if action == -1 and square in self.safe_houses:
+            self.safe_houses.remove(square)
+        elif action == 1 and square not in self.safe_houses:
+            self.safe_houses.add(square)
         elif action == 0:
             return 0
     
@@ -97,11 +89,9 @@ class Board:
         
         if action == -1 and square in self.list_of_homes and self.homes >= 2:
             self.list_of_homes.remove(square)
-            self.homes -= 1
         elif action == 1 and square not in self.list_of_homes and self.homes < self.squares - 1:
             self.list_of_homes.add(square)
             self.safe_houses.add(square)
-            self.homes += 1
         elif action == 0:
             return 0
     
@@ -126,6 +116,6 @@ class Board:
     
         Returns the corresponding block tuple."""
             
-        assert player_id <= self.homes, "Number of players should be equal to or less than the avaliable houses."
+        assert player_id <= len(self.list_of_homes), "Number of players should be equal to or less than the avaliable houses."
         
         return self.list_of_homes[player_id]
