@@ -1,10 +1,8 @@
 # (0) Docstring
 """Contains the implementation of Piece class and related methods."""
 
-
 # (1) Imports
 from chowki_bara.utils.decorators import requireRange, requireType
-
 
 # (2) Piece Class
 class Piece:
@@ -131,6 +129,8 @@ class Piece:
             if len(self.player.board.piece_register[new_pos]) == 1:
                 other_piece = self.player.board.piece_register[new_pos][0]
                 other_piece.current_pos = other_piece.player.home # Setting the position of other piece "home" if it exists.
+                
+                other_piece.is_unlocked = False # Locking the other Piece
                 
                 if not self.kills[self.player.board.loops - self.current_loop]:
                     self.kills[self.player.board.loops - self.current_loop] = 1
