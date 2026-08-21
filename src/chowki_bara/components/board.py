@@ -12,13 +12,14 @@ unit_squares = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 class Board:
     
     # (2.1) Initialization method
-    @requireRange(loops="[1, inf)", shells="[1, inf)")
-    @requireType(loops=int, shells=int)
-    def __init__(self, loops=5, shells=4):
+    @requireRange(loops="[1, inf)")
+    @requireType(loops=int, name=str)
+    def __init__(self, loops=5, name="Untitled-Board"):
         """Method for initialization. 
         Accepts (1) required arg:
         - [loops: int > 0] to pass the number of loops."""
         
+        self.name = name
         self.loops = loops
         self.homes = 4
         
@@ -89,9 +90,11 @@ class Board:
         
         if action == -1 and square in self.list_of_homes and self.homes >= 2:
             self.list_of_homes.remove(square)
+            self.homes = len(self.list_of_homes)
         elif action == 1 and square not in self.list_of_homes and self.homes < self.squares - 1:
             self.list_of_homes.add(square)
             self.safe_houses.add(square)
+            self.homes = len(self.list_of_homes)
         elif action == 0:
             return 0
     
