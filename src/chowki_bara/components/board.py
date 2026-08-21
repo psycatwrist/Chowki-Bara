@@ -40,7 +40,7 @@ class Board:
         
         # (2.2.2) Setting Other Default Squares
         self.diagonal_safe_houses = [(x*a, x*b) for x in range(2, loops+1) for a, b in unit_squares]
-        self.norm_safe_houses = [(x*a, x*b) for x in range(1, loops, -2) for a, b in unit_squares]
+        self.norm_safe_houses = [(x*a, x*b) for x in range(loops, 1, -2) for a, b in unit_squares]
         
         self.safe_houses = self.diagonal_safe_houses + self.norm_safe_houses + self.list_of_homes + self.castle
     
@@ -71,7 +71,7 @@ class Board:
         if action == -1 and square in self.safe_houses:
             self.safe_houses.remove(square)
         elif action == 1 and square not in self.safe_houses:
-            self.safe_houses.add(square)
+            self.safe_houses.append(square)
         elif action == 0:
             return 0
     
@@ -91,9 +91,9 @@ class Board:
         if action == -1 and square in self.list_of_homes and self.homes >= 2:
             self.list_of_homes.remove(square)
             self.homes = len(self.list_of_homes)
-        elif action == 1 and square not in self.list_of_homes and self.homes < self.squares - 1:
-            self.list_of_homes.add(square)
-            self.safe_houses.add(square)
+        elif action == 1 and square not in self.list_of_homes and self.homes < len(self.square_set) - 1:
+            self.list_of_homes.append(square)
+            self.safe_houses.append(square)
             self.homes = len(self.list_of_homes)
         elif action == 0:
             return 0
@@ -108,7 +108,7 @@ class Board:
         Returns a boolean."""
         assert square in self.square_set, "Square is invalid for the given board."
         
-        return square in self.safe_houses
+        return square in self.list_of_homes
     
     # (2.8) Home Distributor Method
     @requireType(player_id=int)
@@ -119,6 +119,6 @@ class Board:
     
         Returns the corresponding block tuple."""
             
-        assert player_id <= len(self.list_of_homes), "Number of players should be equal to or less than the avaliable houses."
+        assert player_id < len(self.list_of_homes), "Number of players should be equal to or less than the avaliable houses."
         
         return self.list_of_homes[player_id]
