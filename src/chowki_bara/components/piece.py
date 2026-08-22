@@ -157,4 +157,4 @@ class Piece:
         
         # (2.4.3.3) Updating castled pieces (if it does)
         if new_pos == (0, 0):
-            self.player.castled_pieces += 1
+            self.player.number_of_castled_pieces += 1
