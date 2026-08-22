@@ -22,6 +22,7 @@ class Board:
         self.name = name
         self.loops = loops
         self.homes = 4
+        self._player_id_officer = 0
         
         self.square_set = {(a, b) for a in range(-loops, loops + 1) for b in range(-loops, loops + 1)} # Creating a set of all possible squares
         
@@ -89,6 +90,7 @@ class Board:
         assert square in self.square_set, "Square is invalid for the given board."
         
         if action == -1 and square in self.list_of_homes and self.homes >= 2:
+            assert len(self.list_of_homes) >= self._player_id_officer, "Number of homes should be at least equal to the number of players."
             self.list_of_homes.remove(square)
             self.homes = len(self.list_of_homes)
         elif action == 1 and square not in self.list_of_homes and self.homes < len(self.square_set) - 1:
